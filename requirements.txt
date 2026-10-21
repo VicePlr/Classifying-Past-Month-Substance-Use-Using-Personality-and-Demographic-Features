@@ -1,0 +1,6 @@
+matplotlib
+numpy
+pandas
+scikit-learn
+seaborn
+# sqlite3 is included with Python; no pip requirement is needed.
