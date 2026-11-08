@@ -93,21 +93,6 @@ Alternatively, open the notebooks in VS Code with the Python and Jupyter extensi
 2. Run **Group_7_ongoing_1.ipynb** from top to bottom to rebuild `data_raw` and `data_clean`.
 3. Run **Group_7_ongoing_2.ipynb** from top to bottom to construct the target and run the analysis and models.
 
-Both notebooks use paths relative to the repository root. Ongoing 1 replaces the database tables, so rerun Ongoing 2 after rebuilding them. Dependency versions are not pinned, so results may vary with library versions.
-
-### Current execution notes
-
-**Database writes are committed.** Ongoing 1 saves both tables through `pandas.to_sql()`, which commits its SQLite writes automatically. Ongoing 2 explicitly commits the target update before closing its connection:
-
-```python
-    cursor.execute(update_target_column)
-    connection.commit()
-```
-
-Rerunning this cell may print `duplicate column name: User` because the column already exists. The exception is caught, and the target update still runs. Rerun the cell to refresh any previously saved labels; the stored class counts should then be 964 zeros and 921 ones.
-
-**Country and ethnicity remain text.** Ongoing 1 attempts to cast their decoded labels to `float32` and prints caught conversion errors. Remove `Country` and `Ethnicity` from that casting cell's `numeric_cols` list; retain them as text. Only the seven psychological-score columns should be cast there.
-
 ## Limitations and next steps
 
 The survey is self-reported and observational, so the analysis describes associations within this sample and cannot establish causation. The sample is concentrated in the UK and USA, and 91.25% of respondents are recorded as White; results should not be interpreted as population prevalence or assumed to generalize to other populations.
