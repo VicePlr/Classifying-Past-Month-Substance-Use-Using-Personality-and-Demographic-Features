@@ -46,7 +46,7 @@ The substance fields record recency of use. Ongoing 1 converts each selected fie
 
 Ongoing 2 defines `User = 1` if **any** of the eight indicators is 1, and `User = 0` otherwise. The reports call these classes “User” and “Non-User.” Here, “Non-User” means no reported use of those eight substances in the last month; it does **not** mean lifetime abstinence or no use of other substances.
 
-Recomputing the target from the substance indicators gives **921 Users (48.86%)** and **964 Non-Users (51.14%)**. The stored `User` column in the supplied database is currently all zeros; see the execution notes below before querying it directly.
+Recomputing the target from the substance indicators gives **921 Users (48.86%)** and **964 Non-Users (51.14%)**. Run Ongoing 2 to recompute and persist `User` before querying the stored column directly.
 
 ## Analysis workflow
 
@@ -89,7 +89,7 @@ python -m venv .venv
 
 Alternatively, open the notebooks in VS Code with the Python and Jupyter extensions and select the environment containing the analysis dependencies. `requirements.txt` does not include a notebook interface or kernel package; install `ipykernel` in that environment if needed. SQLite support is included with Python.
 
-1. Review the execution notes below and apply the two Ongoing 2 corrections before a complete rerun.
+1. Review the execution notes below before a complete rerun.
 2. Run **Group_7_ongoing_1.ipynb** from top to bottom to rebuild `data_raw` and `data_clean`.
 3. Run **Group_7_ongoing_2.ipynb** from top to bottom to construct the target and run the analysis and models.
 
@@ -97,20 +97,14 @@ Both notebooks use paths relative to the repository root. Ongoing 1 replaces the
 
 ### Current execution notes
 
-**Target updates are not committed.** Ongoing 2 calculates the correct `User` values within its first database connection, but `contextlib.closing` closes that connection without committing the `UPDATE`. The supplied database consequently has 1,885 stored zeros in `User`. In the target-construction cell, add `connection.commit()` immediately after the update, at the same indentation:
+**Database writes are committed.** Ongoing 1 saves both tables through `pandas.to_sql()`, which commits its SQLite writes automatically. Ongoing 2 explicitly commits the target update before closing its connection:
 
 ```python
     cursor.execute(update_target_column)
     connection.commit()
 ```
 
-Rerunning this cell may print `duplicate column name: User` because the column already exists. The exception is caught, and the target update still runs. After committing, the stored class counts should be 964 zeros and 921 ones.
-
-**The model-comparison cell uses a different F1 column name.** Training creates `results_df["F1"]`, but comparison looks for `"F1-Score"`, which raises `KeyError` on a fresh run. Replace the selection line with:
-
-```python
-best_model_name = results_df.loc[results_df["F1"].idxmax(), "Model"]
-```
+Rerunning this cell may print `duplicate column name: User` because the column already exists. The exception is caught, and the target update still runs. Rerun the cell to refresh any previously saved labels; the stored class counts should then be 964 zeros and 921 ones.
 
 **Country and ethnicity remain text.** Ongoing 1 attempts to cast their decoded labels to `float32` and prints caught conversion errors. Remove `Country` and `Ethnicity` from that casting cell's `numeric_cols` list; retain them as text. Only the seven psychological-score columns should be cast there.
 
