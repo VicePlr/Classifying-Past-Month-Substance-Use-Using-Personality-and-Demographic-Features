@@ -64,7 +64,7 @@ Recomputing the target from the substance indicators gives **921 Users (48.86%)*
 - Uses ten source features: `Age`, `Gender`, `Education`, the five personality scores, `Impulsive`, and `SS`. Country and ethnicity are explored but omitted from modeling because the sample is concentrated in a few categories.
 - One-hot encodes age and education with reference categories dropped, retains binary gender, and produces **21 model input columns**. Neither `ID` nor the substance indicators are model inputs; the indicators define the target.
 - Makes a stratified 80/20 split with `random_state=42`: **1,508 training rows** and **377 test rows**. Fits `StandardScaler` on the training psychological scores and applies it to the test scores.
-- Trains Logistic Regression (`max_iter=1000`), Decision Tree, and Random Forest. Both tree models use `random_state=42`; other settings use library defaults.
+- Trains Logistic Regression (`max_iter=1000`) and Random Forest (`random_state=42`); other settings use library defaults.
 
 ## Baseline results
 
@@ -73,7 +73,6 @@ The saved model-training output reports the following scores. They were also rep
 | Model | Accuracy | Precision | Recall | F1 | ROC-AUC |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | Logistic Regression | 0.7825 | 0.8312 | 0.6957 | 0.7574 | 0.8705 |
-| Decision Tree | 0.6976 | 0.7059 | 0.6522 | 0.6780 | 0.6966 |
 | Random Forest | 0.7719 | 0.8101 | 0.6957 | 0.7485 | 0.8538 |
 
 Logistic Regression has the highest F1 and ROC-AUC on this split. These are preliminary baseline results: the same test set is used to compare and select models, and the IQR capping limits were calculated on the full dataset before splitting. A stronger evaluation should fit data-dependent preprocessing within training folds, select models and thresholds using validation data, and reserve a separate test set for final evaluation.
