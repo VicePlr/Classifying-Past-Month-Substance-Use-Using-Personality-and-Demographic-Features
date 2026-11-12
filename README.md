@@ -74,22 +74,25 @@ The target is positive when **any** of the eight indicators equals 1.
 ## ✨ The Analysis Journey
 
 ```mermaid
-flowchart LR
+flowchart TD
     A["Source survey<br/>.data file"] --> B["SQLite<br/>data_raw"]
     B --> C["Cleaning and mapping<br/>data_clean"]
     C --> D["Target construction<br/>and EDA"]
-    D --> E["Encoding and split<br/>Training-only scaling"]
-    E --> F["Logistic Regression"]
-    E --> G["Random Forest"]
-    F --> H["Evaluation<br/>and discussion"]
-    G --> H
+    D --> E["One-hot encoding<br/>Stratified 80/20 split"]
+    E --> F["Training set<br/>Stratified 5-fold cross-validation"]
+    F --> G["Logistic Regression pipeline<br/>Scaling within each training fold"]
+    F --> H["Random Forest pipeline<br/>Scaling within each training fold"]
+    G --> I["Select the model<br/>Highest mean CV F1"]
+    H --> I
+    I --> J["Refit selected pipeline<br/>Entire training set"]
+    J --> K["Test evaluation<br/>Metrics, confusion matrix, and ROC curve"]
 
     classDef source fill:#15243b,stroke:#6ee7c9,color:#edf8ff;
     classDef analysis fill:#241d43,stroke:#b69af6,color:#f5f0ff;
     classDef model fill:#23352e,stroke:#80cdb0,color:#f0fff7;
     class A,B,C source;
-    class D,E,H analysis;
-    class F,G model;
+    class D,E,F,I,K analysis;
+    class G,H,J model;
 ```
 
 | Stage | Chapter | What happens |
@@ -98,8 +101,8 @@ flowchart LR
 | **02** | Dataset and Initial Inspection | Define columns, load the `.data` file, select fields, and import them into SQLite. |
 | **03** | Data Cleaning | Check duplicates and missing values, inspect unique values, map categories, cast datatypes, and detect outliers. |
 | **04** | Target Construction and Exploratory Data Analysis | Build `User`; explore distributions, correlations, and combinations of demographic and behavioral features. |
-| **05** | Data Preparation | Encode age and education, create a stratified 80/20 split, and fit scaling on training data. |
-| **06** | Baseline Model Training and Evaluation | Compare Logistic Regression and Random Forest using classification metrics, confusion matrices, and ROC curves. |
+| **05** | Data Preparation | One-hot encode age and education, separate features and target, and create a stratified 80/20 split. |
+| **06** | Baseline Model Training and Evaluation | Compare pipelines using stratified 5-fold CV with scaling fitted within each training fold; select by mean F1, refit on all training rows, and evaluate the selected model on the test set. |
 | **07** | Discussion, Conclusions and Recommendations | Interpret findings, describe limitations, and identify future improvements. |
 
 **Training set:** 1,508 records · **Test set:** 377 records · **Split seed:** `42`
@@ -108,20 +111,34 @@ flowchart LR
 
 ## 📊 Results
 
-The latest saved training output in [Final_Report.ipynb](Final_Report.ipynb) reports:
+The saved outputs in [Final_Report.ipynb](Final_Report.ipynb) separate training-set model comparison from evaluation of the selected model.
+
+### Model Comparison on Training Data
+
+Both candidate pipelines use **Stratified 5-Fold Cross-Validation** on the 1,508 training records, with `shuffle=True` and `random_state=42`. Each pipeline fits `StandardScaler` on the seven numerical features within each training fold and passes the encoded categorical features through unchanged.
+
+| Model | Mean CV F1 | Std CV F1 |
+| --- | ---: | ---: |
+| **Logistic Regression** | **0.7788** | **0.0279** |
+| Random Forest | 0.7664 | 0.0361 |
+
+**Logistic Regression** is selected by the highest mean CV F1 and refitted on the entire training set. The standard deviations describe variation across folds; the score difference has not been tested for statistical significance.
+
+### Selected Model on the Test Set
+
+The fitted Logistic Regression pipeline is evaluated on the 377 test records:
 
 | Model | Accuracy | Precision | Recall | F1 | ROC-AUC |
 | --- | ---: | ---: | ---: | ---: | ---: |
 | **Logistic Regression** | **78.25%** | **0.8312** | **0.6957** | **0.7574** | **0.8707** |
-| Random Forest | 76.66% | 0.8077 | 0.6848 | 0.7412 | 0.8538 |
 
-Precision, recall, and F1 refer to **`User = 1`**. Logistic Regression leads this comparison, while recall indicates that a substantial share of positive cases is missed.
+Precision, recall, and F1 refer to **`User = 1`**. The selected model correctly identifies 128 of 184 Users and misses 56. Its confusion matrix is `[[167, 26], [56, 128]]`, with rows representing actual classes and columns representing predicted classes in the order Non-User, User.
 
-These are **preliminary baseline results**. The same test set is used to compare and select models; cross-validation and independent final evaluation remain future work.
+These are **preliminary baseline results**. The current workflow selects the model using training-set cross-validation. The test set was inspected in earlier project versions, so fresh independent evaluation data would strengthen confirmation of the results. Hyperparameter search with `GridSearchCV` and classification threshold tuning remain future work.
 
 ### Classification in View
 
-![Saved Logistic Regression confusion matrix and ROC curve](assets/readme/model-evaluation.png)
+![Confusion matrix and ROC curve for the Logistic Regression pipeline selected by cross-validation](assets/readme/model-evaluation.png)
 
 ### Relationships in the Data
 
@@ -185,6 +202,7 @@ The import cells rebuild the SQLite tables. The source survey remains in [`data/
 - The survey is self-reported and observational. Findings describe associations within this sample.
 - UK and USA respondents account for 84.93% of the sample; 91.25% of respondents are recorded as White. Generalization to other populations requires further evaluation.
 - Section 3.5 detects IQR outliers and retains the original scores. Any future clipping thresholds should be fitted within training data or training folds.
+- Age and Education are one-hot encoded before the train/test split. Moving the encoder inside the modeling pipeline is a further improvement for preprocessing separation.
 - Eight source records report using the fictitious substance Semeron. A sensitivity analysis of these records remains an improvement to investigate.
 - The repository currently contains notebook-based analysis, rather than a deployed application or saved inference pipeline.
 
