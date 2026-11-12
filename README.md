@@ -188,14 +188,6 @@ The import cells rebuild the SQLite tables. The source survey remains in [`data/
 - Eight source records report using the fictitious substance Semeron. A sensitivity analysis of these records remains an improvement to investigate.
 - The repository currently contains notebook-based analysis, rather than a deployed application or saved inference pipeline.
 
-### Next Steps
-
-- [ ] Stratified cross-validation and hyperparameter tuning.
-- [ ] Classification-threshold selection using validation data.
-- [ ] Sensitivity analysis for survey-validity flags and outlier handling.
-- [ ] Export the fitted preprocessing and selected model together.
-- [ ] Build a Streamlit demonstration for research and presentation.
-
 ## 👥 The Team
 
 | Member | Student ID |
