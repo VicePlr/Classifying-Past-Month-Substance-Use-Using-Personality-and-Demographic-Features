@@ -1,111 +1,216 @@
-# The Five-Factor Model of Personality and Evaluation of Drug Consumption Risk
+<p align="center">
+  <img src="assets/readme/banner.svg" alt="Personality meets data: a constellation of the Big Five traits and project statistics" width="100%">
+</p>
 
-**Course:** ADY201m - AI, Data Science with Python & SQL
+<h1 align="center">Classifying Past-Month Substance Use<br>Using Personality and Demographic Features</h1>
 
-**Class:** AI2104 | **Group:** 7
+<p align="center">
+  A seven-stage exploration of survey data, personality traits, and self-reported substance use.
+</p>
 
-This coursework project explores associations between demographic characteristics, Big Five personality scores, impulsivity, sensation seeking, and self-reported substance use. It uses Python and SQLite for data preparation, exploratory data analysis (EDA), and baseline binary classification.
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&amp;logo=python&amp;logoColor=white" alt="Python 3.11">
+  <img src="https://img.shields.io/badge/Jupyter-Notebook-F37626?style=for-the-badge&amp;logo=jupyter&amp;logoColor=white" alt="Jupyter Notebook">
+  <img src="https://img.shields.io/badge/SQLite-Database-003B57?style=for-the-badge&amp;logo=sqlite&amp;logoColor=white" alt="SQLite database">
+  <img src="https://img.shields.io/badge/scikit--learn-Baselines-F7931E?style=for-the-badge&amp;logo=scikitlearn&amp;logoColor=white" alt="scikit-learn baseline models">
+</p>
 
-The classification task is to identify respondents who reported using **at least one of eight selected substances within the month before the survey**. Although the project title refers to *risk*, the models classify reported recent use; they do not predict future use or diagnose dependence.
+<p align="center">
+  <strong>ADY201m</strong> · AI, Data Science with Python &amp; SQL · <strong>AI2104</strong> · <strong>Group 7</strong>
+</p>
 
-## Repository contents
+<p align="center">
+  <a href="Final_Report.ipynb"><strong>Explore the notebook</strong></a> ·
+  <a href="#results">Results</a> ·
+  <a href="#quick-start">Quick start</a> ·
+  <a href="https://archive.ics.uci.edu/dataset/373/drug-consumption-quantified">Dataset</a>
+</p>
 
-| File | Purpose |
-| --- | --- |
-| [Final_Report.ipynb](Final_Report.ipynb) | Combined presentation report: project framing, data preparation, EDA, baseline modeling, and conclusions, with refreshed outputs. |
-| [Group_7_ongoing_1.ipynb](Group_7_ongoing_1.ipynb) | Project framing, data inspection, cleaning, and SQLite table creation. |
-| [Group_7_ongoing_2.ipynb](Group_7_ongoing_2.ipynb) | Target construction, EDA, feature engineering, and model evaluation. |
-| [data/raw/drug_consumption.data](data/raw/drug_consumption.data) | Original survey file: 1,885 rows and 32 fields, without a header. |
-| [sqlite3/database.sqlite3](sqlite3/database.sqlite3) | Database containing the selected raw fields and cleaned data. |
-| [requirements.txt](requirements.txt) | Analysis dependencies: NumPy, pandas, Matplotlib, seaborn, and scikit-learn. |
+---
 
-## Dataset and target
+## 🧭 The Research Question
 
-The project uses the [UCI Drug Consumption (Quantified) dataset](https://archive.ics.uci.edu/dataset/373/drug+consumption+quantified). Its demographic variables and questionnaire scores are supplied as quantified numeric values, rather than raw questionnaire responses.
+**Can personality scores and demographic characteristics help classify recent substance use within this survey sample?**
 
-Ongoing 1 selects 21 of the source file's 32 fields:
+We explore the Big Five personality traits, impulsivity, sensation seeking, and demographic variables using Python and SQLite. The project brings data inspection, SQL cleaning, exploratory analysis, feature preparation, and two classification baselines together in [one final report](Final_Report.ipynb).
 
-| Fields | Role |
-| --- | --- |
-| `ID` | Record reference, excluded from model inputs. |
-| `Age`, `Gender`, `Education`, `Country`, `Ethnicity` | Demographic variables. |
-| `Nscore`, `Escore`, `Oscore`, `Ascore`, `Cscore` | Big Five scores: Neuroticism, Extraversion, Openness, Agreeableness, and Conscientiousness. |
-| `Impulsive`, `SS` | Impulsivity and sensation-seeking scores. |
-| `Amphet`, `Cannabis`, `Coke`, `Ketamine`, `LSD`, `Mushrooms`, `Legalh`, `Ecstasy` | Eight selected substance-use fields, described in the reports as the month-based Ecstasy pleiad. |
+> **What the target means:** `User = 1` indicates reported use of at least one of eight selected substances during the month before the survey. The analysis classifies reported past behavior; it does not predict future use or diagnose dependence.
 
-The substance fields record recency of use. Ongoing 1 converts each selected field to a binary indicator:
+| Respondents | Original fields | Model inputs after encoding | Baseline models |
+| :---: | :---: | :---: | :---: |
+| **1,885** | **32** | **21** | **2** |
 
-| Source code | Reported recency | Indicator |
-| --- | --- | ---: |
-| `CL0` | Never used | 0 |
-| `CL1` | More than a decade ago | 0 |
-| `CL2` | Within the last decade | 0 |
-| `CL3` | Within the last year | 0 |
-| `CL4` | Within the last month | 1 |
-| `CL5` | Within the last week | 1 |
-| `CL6` | Within the last day | 1 |
+## 🗺️ Dataset Atlas
 
-Ongoing 2 defines `User = 1` if **any** of the eight indicators is 1, and `User = 0` otherwise. The reports call these classes “User” and “Non-User.” Here, “Non-User” means no reported use of those eight substances in the last month; it does **not** mean lifetime abstinence or no use of other substances.
+The project uses the [UCI Drug Consumption (Quantified) dataset](https://archive.ics.uci.edu/dataset/373/drug-consumption-quantified). Its demographic variables and questionnaire scores already have numeric representations supplied by the dataset creators.
 
-Recomputing the target from the substance indicators gives **921 Users (48.86%)** and **964 Non-Users (51.14%)**. Run Ongoing 2 to recompute and persist `User` before querying the stored column directly.
+| Feature group | Variables | Role |
+| --- | --- | --- |
+| Demographics | `Age`, `Gender`, `Education` | Model inputs |
+| Big Five personality | `Nscore`, `Escore`, `Oscore`, `Ascore`, `Cscore` | Model inputs |
+| Behavioral scores | `Impulsive`, `SS` | Model inputs |
+| Additional demographics | `Country`, `Ethnicity` | Explored during EDA; excluded from model inputs |
+| Substance-use responses | Eight selected recency fields | Define the target |
+| Record reference | `ID` | Used for identification; excluded from model inputs |
 
-## Analysis workflow
+### Eight Selected Substance Fields
 
-### Ongoing 1: inspection and cleaning
+`Amphet` · `Cannabis` · `Coke` · `Ketamine` · `LSD` · `Mushrooms` · `Legalh` · `Ecstasy`
 
-- Selects the 21 project fields and writes them to `data_raw`. This table is a subset of the source file, not a copy of all 32 fields.
-- Checks for missing values and duplicates, excluding `ID` from the duplicate comparison. Neither check removes any rows.
-- Converts substance recency codes to binary indicators. Maps age to six category codes (`0`-`5`), education to nine (`0`-`8`), gender to `0` (Female) or `1` (Male), and country and ethnicity to text labels.
-- Caps the seven psychological scores at their respective `Q1 - 1.5 × IQR` and `Q3 + 1.5 × IQR` limits. This affects 82 values across 81 records and retains all 1,885 rows.
-- Writes the cleaned base table to `data_clean`, with 21 columns before Ongoing 2 adds `User`.
+| Original response | Reported recency | Binary indicator |
+| --- | --- | :---: |
+| `CL0`–`CL3` | Never used, or last used more than a month ago | **0** |
+| `CL4`–`CL6` | Used within the last month, week, or day | **1** |
 
-### Ongoing 2: exploration and modeling
+The target is positive when **any** of the eight indicators equals 1.
 
-- Constructs `User` and explores distributions, category balance, feature-target relationships, and correlations. It also compares User rates across Age × SS, Gender × SS, and Impulsive × SS groups.
-- Uses ten source features: `Age`, `Gender`, `Education`, the five personality scores, `Impulsive`, and `SS`. Country and ethnicity are explored but omitted from modeling because the sample is concentrated in a few categories.
-- One-hot encodes age and education with reference categories dropped, retains binary gender, and produces **21 model input columns**. Neither `ID` nor the substance indicators are model inputs; the indicators define the target.
-- Makes a stratified 80/20 split with `random_state=42`: **1,508 training rows** and **377 test rows**. Fits `StandardScaler` on the training psychological scores and applies it to the test scores.
-- Trains Logistic Regression (`max_iter=1000`) and Random Forest (`random_state=42`); other settings use library defaults.
+| Target class | Records | Share |
+| --- | ---: | ---: |
+| **User** | 921 | 48.86% |
+| **Non-User** | 964 | 51.14% |
 
-## Baseline results
+“Non-User” describes the selected substances and time window. It does not mean lifetime abstinence.
 
-The saved model-training output reports the following scores. They were also reproduced with Python 3.11.9 during the README review. Precision, recall, and F1 refer to the positive class (`User = 1`).
+## ✨ The Analysis Journey
+
+```mermaid
+flowchart LR
+    A["Source survey<br/>.data file"] --> B["SQLite<br/>data_raw"]
+    B --> C["Cleaning and mapping<br/>data_clean"]
+    C --> D["Target construction<br/>and EDA"]
+    D --> E["Encoding and split<br/>Training-only scaling"]
+    E --> F["Logistic Regression"]
+    E --> G["Random Forest"]
+    F --> H["Evaluation<br/>and discussion"]
+    G --> H
+
+    classDef source fill:#15243b,stroke:#6ee7c9,color:#edf8ff;
+    classDef analysis fill:#241d43,stroke:#b69af6,color:#f5f0ff;
+    classDef model fill:#23352e,stroke:#80cdb0,color:#f0fff7;
+    class A,B,C source;
+    class D,E,H analysis;
+    class F,G model;
+```
+
+| Stage | Chapter | What happens |
+| :---: | --- | --- |
+| **01** | Business Understanding | Define the question, scope, target, and evaluation criteria. |
+| **02** | Dataset and Initial Inspection | Define columns, load the `.data` file, select fields, and import them into SQLite. |
+| **03** | Data Cleaning | Check duplicates and missing values, inspect unique values, map categories, cast datatypes, and detect outliers. |
+| **04** | Target Construction and EDA | Build `User`; explore distributions, correlations, and combinations of demographic and behavioral features. |
+| **05** | Data Preparation | Encode age and education, create a stratified 80/20 split, and fit scaling on training data. |
+| **06** | Baseline Model Training and Evaluation | Compare Logistic Regression and Random Forest using classification metrics, confusion matrices, and ROC curves. |
+| **07** | Discussion and Conclusions | Interpret findings, describe limitations, and identify future improvements. |
+
+**Training set:** 1,508 records · **Test set:** 377 records · **Split seed:** `42`
+
+<a id="results"></a>
+
+## 📊 Results
+
+The latest saved training output in [Final_Report.ipynb](Final_Report.ipynb) reports:
 
 | Model | Accuracy | Precision | Recall | F1 | ROC-AUC |
 | --- | ---: | ---: | ---: | ---: | ---: |
-| Logistic Regression | 0.7825 | 0.8312 | 0.6957 | 0.7574 | 0.8705 |
-| Random Forest | 0.7719 | 0.8101 | 0.6957 | 0.7485 | 0.8538 |
+| **Logistic Regression** | **78.25%** | **0.8312** | **0.6957** | **0.7574** | **0.8707** |
+| Random Forest | 76.66% | 0.8077 | 0.6848 | 0.7412 | 0.8538 |
 
-Logistic Regression has the highest F1 and ROC-AUC on this split. These are preliminary baseline results: the same test set is used to compare and select models, and the IQR capping limits were calculated on the full dataset before splitting. A stronger evaluation should fit data-dependent preprocessing within training folds, select models and thresholds using validation data, and reserve a separate test set for final evaluation.
+Precision, recall, and F1 refer to **`User = 1`**. Logistic Regression leads this comparison, while recall indicates that a substantial share of positive cases is missed.
 
-## Running the notebooks
+These are **preliminary baseline results**. The same test set is used to compare and select models; cross-validation and independent final evaluation remain future work.
 
-Use Python 3.11 and run commands from the repository root. For a local JupyterLab setup on Windows PowerShell:
+### Classification in View
+
+![Saved Logistic Regression confusion matrix and ROC curve](assets/readme/model-evaluation.png)
+
+### Relationships in the Data
+
+![Saved correlation heatmap of demographic variables, personality scores, and the target](assets/readme/correlation-heatmap.png)
+
+The heatmap describes associations within the sample. Correlation alone does not establish causation or a feature’s importance in a fitted model.
+
+<a id="quick-start"></a>
+
+## ⚙️ Quick Start
+
+Use **Python 3.11** and run commands from the repository root.
+
+### 1. Get the Project
+
+```powershell
+git clone https://github.com/VicePlr/The-Five-Factor-Model-of-personality-and-evaluation-of-drug-consumption-risk.git
+cd The-Five-Factor-Model-of-personality-and-evaluation-of-drug-consumption-risk
+```
+
+### 2. Create the Environment and Open JupyterLab
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install -r requirements.txt jupyterlab
-.\.venv\Scripts\python.exe -m jupyterlab
+.\.venv\Scripts\python.exe -m jupyterlab Final_Report.ipynb
 ```
 
-Alternatively, open the notebooks in VS Code with the Python and Jupyter extensions and select the environment containing the analysis dependencies. `requirements.txt` does not include a notebook interface or kernel package; install `ipykernel` in that environment if needed. SQLite support is included with Python.
+### 3. Run the Report
 
-For the combined presentation version, run **Final_Report.ipynb** from top to bottom. It rebuilds the database and target from the source data without requiring either original notebook to be run first. It preserves the original baseline methodology and explains its evaluation limitations.
+Select the project environment, restart the kernel, and run the notebook from top to bottom. In VS Code, open [Final_Report.ipynb](Final_Report.ipynb), select the `.venv` Python kernel, and use **Restart Kernel and Run All Cells**.
 
-To run the original coursework notebooks separately:
+The import cells rebuild the SQLite tables. The source survey remains in [`data/drug_consumption.data`](data/drug_consumption.data). SQLite support is included with Python, so a separate database server is not required.
 
-1. Review the workflow and limitations above before a complete rerun.
-2. Run **Group_7_ongoing_1.ipynb** from top to bottom to rebuild `data_raw` and `data_clean`.
-3. Run **Group_7_ongoing_2.ipynb** from top to bottom to construct the target and run the analysis and models.
+## 📂 Repository Map
 
-## Limitations and next steps
+```text
+.
+├── Final_Report.ipynb
+├── README.md
+├── requirements.txt
+├── database.sqlite3
+├── data/
+│   └── drug_consumption.data
+└── assets/
+    └── readme/
+        ├── banner.svg
+        ├── model-evaluation.png
+        └── correlation-heatmap.png
+```
 
-The survey is self-reported and observational, so the analysis describes associations within this sample and cannot establish causation. The sample is concentrated in the UK and USA, and 91.25% of respondents are recorded as White; results should not be interpreted as population prevalence or assumed to generalize to other populations.
+| Artifact | Purpose |
+| --- | --- |
+| [Final_Report.ipynb](Final_Report.ipynb) | Complete seven-chapter analysis and presentation notebook. |
+| [Source survey](data/drug_consumption.data) | Original comma-separated `.data` file with 1,885 records and 32 fields. |
+| [SQLite database](database.sqlite3) | Working storage for `data_raw` and `data_clean`. |
+| [Dependencies](requirements.txt) | NumPy, pandas, Matplotlib, seaborn, and scikit-learn. |
 
-Cross-validation, hyperparameter tuning, threshold selection, and a Streamlit demonstration are proposed in the reports but are not implemented in this repository. There is no saved model or deployed application. The current outputs are for exploratory coursework and should not be used to diagnose or make adverse decisions about individuals.
+## 🔭 Research Notes
 
-## Dataset attribution
+- The survey is self-reported and observational. Findings describe associations within this sample.
+- UK and USA respondents account for 84.93% of the sample; 91.25% of respondents are recorded as White. Generalization to other populations requires further evaluation.
+- Section 3.5 detects IQR outliers and retains the original scores. Any future clipping thresholds should be fitted within training data or training folds.
+- Eight source records report using the fictitious substance Semeron. A sensitivity analysis of these records remains an improvement to investigate.
+- The repository currently contains notebook-based analysis, rather than a deployed application or saved inference pipeline.
 
-Fehrman, E., Egan, V., & Mirkes, E. (2015). *Drug Consumption (Quantified)* [Dataset]. UCI Machine Learning Repository. [doi:10.24432/C5TC7S](https://doi.org/10.24432/C5TC7S).
+### Next Steps
 
-UCI lists the dataset under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). This attribution applies to the source dataset; the repository does not include a separate project license.
+- [ ] Stratified cross-validation and hyperparameter tuning.
+- [ ] Classification-threshold selection using validation data.
+- [ ] Sensitivity analysis for survey-validity flags and outlier handling.
+- [ ] Export the fitted preprocessing and selected model together.
+- [ ] Build a Streamlit demonstration for research and presentation.
+
+## 👥 The Team
+
+| Member | Student ID |
+| --- | --- |
+| Hoàng Trọng Hiếu | HE211206 |
+| Nguyễn Quang Minh | HE211213 |
+| Nguyễn Thái Bình Dương | HE211161 |
+| Ngô Anh Duy | HE211165 |
+
+## 📜 Dataset Attribution
+
+Fehrman, E., Egan, V., & Mirkes, E. (2015). *Drug Consumption (Quantified)*. UCI Machine Learning Repository. [DOI: 10.24432/C5TC7S](https://doi.org/10.24432/C5TC7S).
+
+The source dataset is available under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Additional background is available in [The Five Factor Model of Personality and Evaluation of Drug Consumption Risk](https://arxiv.org/abs/1506.06297).
+
+---
+
+<p align="center"><strong>ADY201m · AI2104 · Group 7</strong><br>Personality, data, and a carefully defined research question.</p>

@@ -1,0 +1,96 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="360" viewBox="0 0 1280 360" role="img" aria-labelledby="title description">
+  <title id="title">Personality meets data</title>
+  <desc id="description">A midnight constellation of the five personality dimensions, with project statistics for a study of past-month substance use.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#080e20"/>
+      <stop offset="0.55" stop-color="#151934"/>
+      <stop offset="1" stop-color="#242044"/>
+    </linearGradient>
+    <radialGradient id="violet">
+      <stop offset="0" stop-color="#8b5cf6" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#8b5cf6" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="mint">
+      <stop offset="0" stop-color="#6ee7c9" stop-opacity="0.13"/>
+      <stop offset="1" stop-color="#6ee7c9" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#6ee7c9"/>
+      <stop offset="1" stop-color="#c4a5ff"/>
+    </linearGradient>
+  </defs>
+  <rect width="1280" height="360" rx="24" fill="url(#background)"/>
+  <rect x="0.5" y="0.5" width="1279" height="359" rx="23.5" fill="none" stroke="#464366" stroke-opacity="0.7"/>
+  <circle cx="310" cy="120" r="310" fill="url(#violet)"/>
+  <circle cx="1030" cy="170" r="190" fill="url(#mint)"/>
+  <g fill="#d5dafa">
+    <circle cx="42" cy="43" r="1.2" opacity="0.4"/>
+    <circle cx="206" cy="28" r="1" opacity="0.4"/>
+    <circle cx="430" cy="42" r="1.5" opacity="0.4"/>
+    <circle cx="603" cy="30" r="1" opacity="0.6"/>
+    <circle cx="722" cy="63" r="1.5" opacity="0.5"/>
+    <circle cx="812" cy="36" r="1" opacity="0.5"/>
+    <circle cx="1187" cy="39" r="1.4" opacity="0.6"/>
+    <circle cx="1239" cy="82" r="1" opacity="0.4"/>
+    <circle cx="758" cy="185" r="1.1" opacity="0.5"/>
+    <circle cx="817" cy="244" r="1.5" opacity="0.4"/>
+    <circle cx="1197" cy="237" r="1.2" opacity="0.6"/>
+    <circle cx="1234" cy="301" r="1" opacity="0.4"/>
+    <circle cx="746" cy="326" r="1.2" opacity="0.4"/>
+  </g>
+  <g font-family="Segoe UI, Arial, sans-serif">
+    <rect x="60" y="47" width="30" height="3" rx="1.5" fill="url(#accent)"/>
+    <text x="102" y="53" fill="#b8c5de" font-size="13" font-weight="600" letter-spacing="2.4">A RESEARCH ATLAS · GROUP 7</text>
+    <text x="56" y="137" fill="#f3f4ff" font-size="62" font-weight="700" letter-spacing="0.5">PERSONALITY</text>
+    <text x="56" y="206" fill="#cfbaff" font-size="62" font-weight="700" letter-spacing="0.5">MEETS DATA</text>
+    <text x="60" y="244" fill="#bac5dc" font-size="17">Past-month substance use · Personality · Demographics</text>
+    <g fill="#151d34" stroke="#464561" stroke-width="1">
+      <rect x="60" y="278" width="150" height="58" rx="10"/>
+      <rect x="222" y="278" width="150" height="58" rx="10"/>
+      <rect x="384" y="278" width="150" height="58" rx="10"/>
+      <rect x="546" y="278" width="150" height="58" rx="10"/>
+    </g>
+    <g fill="#f3f4ff" font-size="22" font-weight="700">
+      <text x="76" y="304">1,885</text>
+      <text x="238" y="304">32</text>
+      <text x="400" y="304">21</text>
+      <text x="562" y="304">2</text>
+    </g>
+    <g fill="#aab8d2" font-size="11" letter-spacing="0.6">
+      <text x="76" y="323">RESPONDENTS</text>
+      <text x="238" y="323">SOURCE FIELDS</text>
+      <text x="400" y="323">MODEL INPUTS</text>
+      <text x="562" y="323">CLASSIFIERS</text>
+    </g>
+    <circle cx="1010" cy="166" r="124" fill="none" stroke="#6ee7c9" stroke-opacity="0.12" stroke-dasharray="2 7"/>
+    <g fill="none" stroke="url(#accent)" stroke-width="1.5" stroke-opacity="0.5">
+      <path d="M1010 52 L1122 132 L1080 262 L940 262 L898 132 Z"/>
+      <path d="M1010 52 L1080 262 L898 132 L1122 132 L940 262 Z" stroke-opacity="0.25"/>
+    </g>
+    <circle cx="1010" cy="166" r="47" fill="#151b35" stroke="#71608c"/>
+    <text x="1010" y="163" text-anchor="middle" fill="#f3f4ff" font-size="16" font-weight="700">BIG FIVE</text>
+    <text x="1010" y="181" text-anchor="middle" fill="#aab8d2" font-size="9" letter-spacing="1.7">PERSONALITY</text>
+    <g fill="#19223c" stroke="#8bdccf" stroke-width="1.5">
+      <circle cx="1010" cy="52" r="17"/>
+      <circle cx="1122" cy="132" r="17"/>
+      <circle cx="1080" cy="262" r="17"/>
+      <circle cx="940" cy="262" r="17"/>
+      <circle cx="898" cy="132" r="17"/>
+    </g>
+    <g fill="#e8fff8" font-size="15" font-weight="600" text-anchor="middle">
+      <text x="1010" y="57">N</text>
+      <text x="1122" y="137">E</text>
+      <text x="1080" y="267">O</text>
+      <text x="940" y="267">A</text>
+      <text x="898" y="137">C</text>
+    </g>
+    <g fill="#b9c8dd" font-size="12">
+      <text x="1010" y="24" text-anchor="middle">Neuroticism</text>
+      <text x="1148" y="136">Extraversion</text>
+      <text x="1080" y="304" text-anchor="middle">Openness</text>
+      <text x="940" y="304" text-anchor="middle">Agreeableness</text>
+      <text x="872" y="136" text-anchor="end">Conscientiousness</text>
+    </g>
+  </g>
+</svg>
