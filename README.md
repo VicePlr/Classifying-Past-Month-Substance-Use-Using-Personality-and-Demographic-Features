@@ -12,6 +12,7 @@ The classification task is to identify respondents who reported using **at least
 
 | File | Purpose |
 | --- | --- |
+| [Final_Report.ipynb](Final_Report.ipynb) | Combined presentation report: project framing, data preparation, EDA, baseline modeling, and conclusions, with refreshed outputs. |
 | [Group_7_ongoing_1.ipynb](Group_7_ongoing_1.ipynb) | Project framing, data inspection, cleaning, and SQLite table creation. |
 | [Group_7_ongoing_2.ipynb](Group_7_ongoing_2.ipynb) | Target construction, EDA, feature engineering, and model evaluation. |
 | [data/raw/drug_consumption.data](data/raw/drug_consumption.data) | Original survey file: 1,885 rows and 32 fields, without a header. |
@@ -89,7 +90,11 @@ python -m venv .venv
 
 Alternatively, open the notebooks in VS Code with the Python and Jupyter extensions and select the environment containing the analysis dependencies. `requirements.txt` does not include a notebook interface or kernel package; install `ipykernel` in that environment if needed. SQLite support is included with Python.
 
-1. Review the execution notes below before a complete rerun.
+For the combined presentation version, run **Final_Report.ipynb** from top to bottom. It rebuilds the database and target from the source data without requiring either original notebook to be run first. It preserves the original baseline methodology and explains its evaluation limitations.
+
+To run the original coursework notebooks separately:
+
+1. Review the workflow and limitations above before a complete rerun.
 2. Run **Group_7_ongoing_1.ipynb** from top to bottom to rebuild `data_raw` and `data_clean`.
 3. Run **Group_7_ongoing_2.ipynb** from top to bottom to construct the target and run the analysis and models.
 
