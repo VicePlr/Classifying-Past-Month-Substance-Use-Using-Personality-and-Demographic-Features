@@ -97,10 +97,10 @@ flowchart LR
 | **01** | Business Understanding | Define the question, scope, target, and evaluation criteria. |
 | **02** | Dataset and Initial Inspection | Define columns, load the `.data` file, select fields, and import them into SQLite. |
 | **03** | Data Cleaning | Check duplicates and missing values, inspect unique values, map categories, cast datatypes, and detect outliers. |
-| **04** | Target Construction and EDA | Build `User`; explore distributions, correlations, and combinations of demographic and behavioral features. |
+| **04** | Target Construction and Exploratory Data Analysis | Build `User`; explore distributions, correlations, and combinations of demographic and behavioral features. |
 | **05** | Data Preparation | Encode age and education, create a stratified 80/20 split, and fit scaling on training data. |
 | **06** | Baseline Model Training and Evaluation | Compare Logistic Regression and Random Forest using classification metrics, confusion matrices, and ROC curves. |
-| **07** | Discussion and Conclusions | Interpret findings, describe limitations, and identify future improvements. |
+| **07** | Discussion, Conclusions and Recommendations | Interpret findings, describe limitations, and identify future improvements. |
 
 **Training set:** 1,508 records · **Test set:** 377 records · **Split seed:** `42`
 
